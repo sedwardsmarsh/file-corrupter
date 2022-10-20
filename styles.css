@@ -1,0 +1,17 @@
+#header {
+    font-size: xx-large;
+    text-align: center;
+}
+
+#file {
+    font-size: larger;
+    display: grid;
+    margin: auto;
+}
+
+#uploadButton {
+    font-size: large;
+    display: grid;
+    margin: auto;
+    background-color: lightblue;
+}
