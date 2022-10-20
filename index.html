@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World</title>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+    <style>
+        #header {
+            font-size: xx-large;
+            text-align: center;
+        }
+        #file {
+            font-size: larger;
+            display: grid;
+            margin: auto;
+        }
+        #uploadButton {
+            font-size: large;
+            display: grid;
+            margin: auto;
+            background-color: lightblue;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 id="header">
+        File Corrupter
+    </h1>
+
+    <input type="file" id="file" name="filename">
+
+    <button type="button" id="uploadButton">
+        Upload File
+    </button>
+</body>
+
+<py-script>
+    # mostly borrowed from: https://www.youtube.com/watch?v=RVhVr6x0CgU
+    import asyncio
+    import js
+    from js import document, FileReader
+    from pyodide import create_proxy
+
+
+    def corrupt_file(path: str) -> None:
+        f = open(path, 'wb')
+        for offset in range(1, 3):
+            f.seek(offset)
+            f.write(bytes('garbage', 'utf-8'))
+        f.close()
+
+
+    def read_complete(event) -> None:
+        # corrupt the file
+        corrupt_file(event)
+        
+        # prompt the user to download the file
+
+
+    async def process_file(file) -> None:
+        file_list = document.getElementById('uploadButton').files
+
+        for f in fileList:
+            # reader is a pyodide.JsProxy
+            reader = FileReader.new()
+
+            # create a python proxy for the callback function
+            onload_event = create_proxy(read_complete)
+
+            reader.onload = onload_event
+            # reader.readAsText(f)
+            # trying this method of reading the file since we want to read 
+            # arbitrary files, not only text.
+            reader.readAsArrayBuffer(f)
+
+
+    def main() -> None:
+        # create a python proxy for the callback function
+        file_event = create_proxy(process_file)
+
+        # set the listener to the callback
+        e = document.getElementById("uploadButton")
+        e.addEventListener("click", file_event, False)
+</py-script>
+
+</html>
