@@ -6,4 +6,4 @@ def corrupt_file(path: str) -> None:
     for offset in range(1, 3):
         f.seek(offset)
         f.write(bytes('garbage', 'utf-8')) # write anything into the file
-    f.close()
+    return f

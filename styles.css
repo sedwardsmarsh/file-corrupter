@@ -3,15 +3,13 @@
     text-align: center;
 }
 
-#file {
+#select_file {
     font-size: larger;
     display: grid;
     margin: auto;
 }
 
-#uploadButton {
+#output {
     font-size: large;
-    display: grid;
-    margin: auto;
-    background-color: lightblue;
+    text-align: center;
 }

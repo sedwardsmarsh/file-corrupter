@@ -14,12 +14,15 @@
         File Corrupter
     </h1>
 
-    <input type="file" id="file" name="filename">
+    <input type="file" id="select_file" name="filename">
 
-    <button type="button" id="uploadButton">
-        Upload File
-    </button>
+    <p id="output"></p>
 </body>
+
+<py-env>
+- paths:
+    - corrupter.py
+</py-env>
 
 <py-script src="./main.py"></py-script>
 
