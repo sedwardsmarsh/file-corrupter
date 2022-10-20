@@ -1,31 +1,44 @@
-# mostly borrowed from: https://www.youtube.com/watch?v=RVhVr6x0CgU
-import asyncio
+# This is the main script loaded into index.html
+# learned a lot from: https://www.youtube.com/watch?v=RVhVr6x0CgU
+
 import js
 from js import document, FileReader
 from pyodide import create_proxy
+import corrupter
 
 
-async def process_file(file) -> None:
-    file_list = document.getElementById('uploadButton').files
+def read_file(file) -> None:
+    # debug
+    # console.log(file)
 
-    for f in fileList:
-        # reader is a pyodide.JsProxy
-        reader = FileReader.new()
-
-        # create a python proxy for the callback function
-        onload_event = create_proxy(read_complete)
-
-        reader.onload = onload_event
-        # reader.readAsText(f)
-        # trying this method of reading the file since we want to read 
-        # arbitrary files, not only text.
-        reader.readAsArrayBuffer(f)
+    # corrupt the file
+    corrupter.corrupt_file(file.name)
+    
+    # notify the user the file has been corrupted
+    element = document.getElementById("output")
+    element.style.color = 'green'
+    element.innerText = "Done corrupting file!\nPlease wait for download"
+    
+    # prompt the user to download the file
+    # document.getElementById("output").append(element)
 
 
-def main() -> None:
-    # create a python proxy for the callback function
-    file_event = create_proxy(process_file)
+async def process_files(file) -> None:
+    # grab the select_file <input> tag
+    file_list = document.getElementById('select_file').files
+
+    for f in file_list:
+        read_file(f)
+
+
+def setup() -> None:
+    # create a python proxy for the process_file callback function
+    select_file_event = create_proxy(process_files)
 
     # set the listener to the callback
-    e = document.getElementById("uploadButton")
-    e.addEventListener("click", file_event, False)
+    event = document.getElementById("select_file")
+    event.addEventListener("change", select_file_event, False)
+
+
+# initiate the setup function
+setup()
